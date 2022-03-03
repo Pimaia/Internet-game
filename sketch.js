@@ -3,6 +3,11 @@ var areia, areiamovedica, homeminvisivel;
 var algodaodoce, algodaodocecolorido; 
 var obs1, obs2, obs3, obs4, obs5, obs6;
 var placar;
+var festa;
+var deserto;
+var JOGANDO = 1;
+var MORTE = 0;
+var estado = JOGANDO;
 
 function preload(){
 
@@ -39,33 +44,46 @@ borda = createEdgeSprites();
 
 var numero = Math.round(random(1, 100));
 //console.log(numero);
+
+festa = new Group();
+deserto = new Group();
+
 }
 
 function draw(){
+    background("white");
+    //console.log (frameCount);
+    //console.log (internet.y);
 
-background("white");
+    internet.collide(homeminvisivel);
 
-//console.log (internet.y);
+if(estado === JOGANDO){
+    areia.velocityX = -2;
+    if(areia.x < 0){
+        areia.x = areia.width/2;
+    }
+    if(keyDown("space")&& internet.y > 150){
+        internet.velocityY = -12;
+    }
+    internet.velocityY += 1;
+    cloud();
+    enemy();
+    placar += Math.round(frameCount/60); 
+    if (deserto.isTouching(internet)){
+      estado = MORTE;  
+    }
+} else if (estado === MORTE){
+    areia.velocityX = 0;
+    festa.setVelocityXEach (0);
+    deserto.setVelocityXEach (0);
 
-console.log (frameCount);
 
-areia.velocityX = -2;
-if(areia.x < 0){
-    areia.x = areia.width/2;
+
+    
 }
-
-if(keyDown("space")&& internet.y > 150){
-    internet.velocityY = -12;
-}
-internet.velocityY += 1;
-internet.collide(homeminvisivel);
-
-cloud();
-enemy();
 
 drawSprites();
 text ("Pontuação:"+ placar, 500, 50);
-placar += Math.round(frameCount/60); 
 }
 
 function cloud(){
@@ -77,6 +95,7 @@ function cloud(){
         algodaodoce.depth = internet.depth; 
         internet.depth += 1;
         algodaodoce.lifetime = 250;
+        festa.add(algodaodoce);
     }
     
 }
@@ -102,5 +121,6 @@ function enemy(){
     }
     cactus.scale = 0.5;
     cactus.lifetime = 250;
+    deserto.add(cactus);
 }
 }
