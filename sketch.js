@@ -11,6 +11,9 @@ var estado = JOGANDO;
 var medo; 
 var tantantan, fim;
 var tantan, recomeco;
+var depre;
+var pulacorda;
+var naosouruim;
 
 function preload(){
 
@@ -29,7 +32,12 @@ medo = loadAnimation ("trex_collided.png");
 
 tantantan = loadImage ("gameOver.png");
 tantan = loadImage ("restart.png"); 
+
+depre = loadSound ("die.mp3");
+pulacorda = loadSound ("jump.mp3");
+naosouruim = loadSound ("checkPoint.mp3");
 }
+
 
 function setup(){
 
@@ -77,19 +85,24 @@ function draw(){
     internet.collide(homeminvisivel);
 
 if(estado === JOGANDO){
-    areia.velocityX = -2;
+    areia.velocityX = -(4 + placar/100);
     if(areia.x < 0){
         areia.x = areia.width/2;
     }
     if(keyDown("space")&& internet.y > 150){
         internet.velocityY = -12;
+        pulacorda.play();
     }
     internet.velocityY += 1;
     cloud();
     enemy();
     placar += Math.round(frameCount/60); 
+    if (placar%500 === 0 && placar > 0){
+        naosouruim.play();
+    }
     if (deserto.isTouching(internet)){
       estado = MORTE;  
+      depre.play();
     }
     fim.visible = false;
     recomeco.visible = false;
@@ -129,7 +142,7 @@ function cloud(){
 function enemy(){
     if (frameCount % 60 === 0){
         var cactus = createSprite (600, 165, 10, 40);
-        cactus.velocityX = -6;
+        cactus.velocityX = -(6 + placar/100);
     var number = Math.round(random(1,6)); 
     switch (number){
         case 1: cactus.addImage(obs1);
