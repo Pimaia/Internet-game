@@ -14,6 +14,7 @@ var tantan, recomeco;
 var depre;
 var pulacorda;
 var naosouruim;
+var mensagem = "Isso é uma mensagem";
 
 function preload(){
 
@@ -81,6 +82,7 @@ function draw(){
     background("white");
     //console.log (frameCount);
     //console.log (internet.y);
+    //console.log(mensagem);
 
     internet.collide(homeminvisivel);
 
@@ -96,7 +98,7 @@ if(estado === JOGANDO){
     internet.velocityY += 1;
     cloud();
     enemy();
-    placar += Math.round(frameCount/60); 
+    placar += Math.round(frameRate()/60); 
     if (placar%500 === 0 && placar > 0){
         naosouruim.play();
     }
@@ -116,14 +118,26 @@ if(estado === JOGANDO){
     internet.velocityY = 0;
     fim.visible = true;
     recomeco.visible = true;
-
-
-
+    if(mousePressedOver(recomeco)){
+        tenteNovamente();
     
+}
+
+
 }
 
 drawSprites();
 text ("Pontuação:"+ placar, 500, 50);
+}
+
+function tenteNovamente(){
+   estado = JOGANDO; 
+   festa.destroyEach();
+   deserto.destroyEach();
+   placar = 0;
+   internet.changeAnimation ("correndo");
+
+    
 }
 
 function cloud(){
